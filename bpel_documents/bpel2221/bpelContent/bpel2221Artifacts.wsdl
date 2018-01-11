@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://Trip" xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop" name="bpel2221" targetNamespace="http://Trip">
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     TYPE DEFINITION - List of types participating in this BPEL process 
+     The BPEL Designer will generate default request and response types
+     but you can define or import any XML Schema type and use them as part 
+     of the message types.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+    <plnk:partnerLinkType name="airline1">
+    <plnk:role name="airline1-role" portType="tns:AirlineCompany2PortType"/>
+  </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="car1">
+    <plnk:role name="car1-role" portType="tns:CarCompany2PortType"/>
+  </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="hotel1">
+    <plnk:role name="hotel1-role" portType="tns:HotelCompany2PortType"/>
+  </plnk:partnerLinkType>
+    <plnk:partnerLinkType name="sight">
+    <plnk:role name="sight-role" portType="tns:SightCompanyPortType"/>
+  </plnk:partnerLinkType>
+    <import location="http://116.196.88.102:8080/axis2/services/AirlineCompany2?wsdl" namespace="http://Trip"/>
+    <import location="http://116.196.88.102:8080/axis2/services/CarCompany2?wsdl" namespace="http://Trip"/>
+    <import location="http://116.196.88.102:8080/axis2/services/HotelCompany2?wsdl" namespace="http://Trip"/>
+    <import location="http://116.196.88.102:8080/axis2/services/SightCompany?wsdl" namespace="http://Trip"/>
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://Trip">
+
+            <element name="bpel2221Request">
+                <complexType>
+                    <sequence>
+                    	<element name="orderno" type="string"/>
+                    	<element name="flightno" type="string"/>
+                    	<element name="c_id" type="int"/>
+                    	<element name="h_id" type="int"/>
+                    	<element name="checkindate" type="string"/>
+                    	<element name="checkoutdate" type="string"/>
+                    	<element name="v_name" type="string"/>
+                    	<element name="g_name" type="string"/>
+                    </sequence>
+                </complexType>
+            </element>
+
+            <element name="bpel2221Response">
+                <complexType>
+                    <sequence>
+                    	<element name="airline" type="string" />
+                    	<element name="car" type="string"></element>
+                    	<element name="hotel" type="string"></element>
+                    	<element name="sight" type="string"></element>
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+    </types>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     MESSAGE TYPE DEFINITION - Definition of the message types used as 
+     part of the port type defintions
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+    <message name="bpel2221RequestMessage">
+        <part element="tns:bpel2221Request" name="payload"/>
+    </message>
+    <message name="bpel2221ResponseMessage">
+        <part element="tns:bpel2221Response" name="payload"/>
+    </message>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     PORT TYPE DEFINITION - A port type groups a set of operations into
+     a logical service unit.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+
+    <!-- portType implemented by the bpel2221 BPEL process -->
+    <portType name="bpel2221">
+        <operation name="process">
+            <input message="tns:bpel2221RequestMessage"/>
+            <output message="tns:bpel2221ResponseMessage"/>
+        </operation>
+    </portType>   
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     PARTNER LINK TYPE DEFINITION
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->    
+    <plnk:partnerLinkType name="bpel2221">
+        <plnk:role name="bpel2221Provider" portType="tns:bpel2221"/>
+    </plnk:partnerLinkType>
+    
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     BINDING DEFINITION - Defines the message format and protocol details
+     for a web service.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <binding name="bpel2221Binding" type="tns:bpel2221">
+    	<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    	<operation name="process">
+    		<soap:operation soapAction="http://Trip/process"/>
+    		<input>
+    			<soap:body use="literal"/>
+    		</input>
+    		<output>
+    			<soap:body use="literal"/>
+    		</output>
+    	</operation>
+    </binding>
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     SERVICE DEFINITION - A service groups a set of ports into
+     a service unit.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+    <service name="bpel2221Service">
+    	<port binding="tns:bpel2221Binding" name="bpel2221Port">
+    		<soap:address location="http://116.196.88.102:8080/ode/processes/bpel2221"/>
+    	</port>
+    </service>
+</definitions>
